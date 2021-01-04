@@ -18,8 +18,6 @@ class MyTestCase(unittest.TestCase):
     def test_something(self):
         G: DiGraph = self.GraphBilder(5)
         self.assertEqual(G.e_size(), 20)
-        self.assertEqual(len(G.all_in_edges_of_node(0)), 4)
-        self.assertEqual(len(G.all_out_edges_of_node(0)), 4)
         self.assertEqual(True, True)
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ class DiGraph(GraphInterface):
 
     _nodeCounter = 0
 
-    def __init__(self):
+    def __init__(self) -> object:
         self._vertices = dict()
         self._edges = dict()
         self._mc = 0
@@ -32,7 +32,11 @@ class DiGraph(GraphInterface):
 
         return False
 
-    def add_node(self, node_id: int, pos: tuple = None) -> bool:
+    def add_node(self, node_id: object, pos: object = None) -> object:
+        """
+
+        :rtype: object
+        """
         if type(node_id) is not int:
             return False
         try:
