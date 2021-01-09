@@ -29,7 +29,7 @@ def check0():
     This function tests the naming (main methods of the DiGraph class, as defined in GraphInterface.
     :return:
     """
-    g = DiGraph()  # creates an empty directed graph
+    g = DiGraph()  # creates an empty directed _graph
     for n in range(4):
         g.add_node(n)
     g.add_edge(0, 1, 1)
@@ -40,7 +40,7 @@ def check0():
     g.remove_edge(1, 3)
     g.add_edge(1, 3, 10)
     print(g)  # prints the __repr__ (func output)
-    print(g.get_all_v())  # prints a dict with all the graph's vertices.
+    print(g.get_all_v())  # prints a dict with all the _graph's vertices.
     print(g.all_in_edges_of_node(1))
     print(g.all_out_edges_of_node(1))
     g_algo = GraphAlgo(g)
@@ -53,7 +53,7 @@ def check1():
        This function tests the naming (main methods of the GraphAlgo class, as defined in GraphAlgoInterface.
     :return:
     """
-    g_algo = GraphAlgo()  # init an empty graph - for the GraphAlgo
+    g_algo = GraphAlgo()  # init an empty _graph - for the GraphAlgo
     file = "../data/T0.json"
     g_algo.load_from_json(file)  # init a GraphAlgo from a json file
     print(g_algo.connected_components())

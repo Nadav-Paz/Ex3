@@ -1,17 +1,17 @@
 class GraphInterface:
-    """This abstract class represents an interface of a graph."""
+    """This abstract class represents an interface of a _graph."""
 
     def v_size(self) -> int:
         """
-        Returns the number of vertices in this graph
-        @return: The number of vertices in this graph
+        Returns the number of vertices in this _graph
+        @return: The number of vertices in this _graph
         """
         raise NotImplementedError
 
     def e_size(self) -> int:
         """
-        Returns the number of edges in this graph
-        @return: The number of edges in this graph
+        Returns the number of edges in this _graph
+        @return: The number of edges in this _graph
         """
         raise NotImplementedError
 
@@ -31,15 +31,15 @@ class GraphInterface:
 
     def get_mc(self) -> int:
         """
-        Returns the current version of this graph,
-        on every change in the graph state - the MC should be increased
-        @return: The current version of this graph.
+        Returns the current version of this _graph,
+        on every change in the _graph state - the MC should be increased
+        @return: The current version of this _graph.
         """
         raise NotImplementedError
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         """
-        Adds an edge to the graph.
+        Adds an edge to the _graph.
         @param id1: The start node of the edge
         @param id2: The end node of the edge
         @param weight: The weight of the edge
@@ -51,7 +51,7 @@ class GraphInterface:
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         """
-        Adds a node to the graph.
+        Adds a node to the _graph.
         @param node_id: The node ID
         @param pos: The position of the node
         @return: True if the node was added successfully, False o.w.
@@ -62,7 +62,7 @@ class GraphInterface:
 
     def remove_node(self, node_id: int) -> bool:
         """
-        Removes a node from the graph.
+        Removes a node from the _graph.
         @param node_id: The node ID
         @return: True if the node was removed successfully, False o.w.
 
@@ -72,7 +72,7 @@ class GraphInterface:
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         """
-        Removes an edge from the graph.
+        Removes an edge from the _graph.
         @param node_id1: The start node of the edge
         @param node_id2: The end node of the edge
         @return: True if the edge was removed successfully, False o.w.

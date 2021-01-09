@@ -4,16 +4,16 @@ from src import GraphInterface
 
 
 class GraphAlgoInterface:
-    """This abstract class represents an interface of a graph."""
+    """This abstract class represents an interface of a _graph."""
 
     def get_graph(self) -> GraphInterface:
         """
-        :return: the directed graph on which the algorithm works on.
+        :return: the directed _graph on which the algorithm works on.
         """
 
     def load_from_json(self, file_name: str) -> bool:
         """
-        Loads a graph from a json file.
+        Loads a _graph from a json file.
         @param file_name: The path to the json file
         @returns True if the loading was successful, False o.w.
         """
@@ -21,7 +21,7 @@ class GraphAlgoInterface:
 
     def save_to_json(self, file_name: str) -> bool:
         """
-        Saves the graph in JSON format to a file
+        Saves the _graph in JSON format to a file
         @param file_name: The path to the out file
         @return: True if the save was successful, False o.w.
         """
@@ -62,14 +62,14 @@ class GraphAlgoInterface:
 
     def connected_components(self) -> List[list]:
         """
-        Finds all the Strongly Connected Component(SCC) in the graph.
+        Finds all the Strongly Connected Component(SCC) in the _graph.
         @return: The list all SCC
         """
         raise NotImplementedError
 
     def plot_graph(self) -> None:
         """
-        Plots the graph.
+        Plots the _graph.
         If the nodes have a position, the nodes will be placed there.
         Otherwise, they will be placed in a random but elegant manner.
         @return: None
