@@ -15,7 +15,6 @@ class MyTestCase(unittest.TestCase):
                     G.add_edge(i, j, 1)
                     G.add_edge(j, i, 1)
         return G
-
     def testEdgeSize(self):
         g=self.GraphBilder(5)
         self.assertEqual(20, g.e_size())
@@ -36,6 +35,13 @@ class MyTestCase(unittest.TestCase):
         D = g.all_out_edges_of_node(0)
         self.assertEqual(4, len(D))
 
+    def testCompereNode(self):
+        g = self.GraphBilder(5)
+        N1 = g.get_node(0)
+        N1.set_weight(3)
+        N2 = g.get_node(1)
+        N2.set_weight(2)
+        self.assertTrue(N1 > N2)
 
 
 

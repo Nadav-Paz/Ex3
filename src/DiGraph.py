@@ -173,3 +173,9 @@ class DiGraph(GraphInterface):
                 return False
 
             return other.get_key == self._key and self._point == other.get_point()
+
+        def __gt__(self, other):
+            return self.get_weight() > other.get_weight()
+
+        def __ge__(self, other):
+            return self.get_weight() >= other.get_weight()
