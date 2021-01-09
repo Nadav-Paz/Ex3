@@ -21,6 +21,9 @@ class DiGraph(GraphInterface):
         return self._mc
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
+        if id1 == id2:
+            return False
+
         if self._vertices.__contains__(id1) and self._vertices.__contains__(id2):
             if not self._edges.__contains__((id1, id2)):
 
@@ -158,7 +161,7 @@ class DiGraph(GraphInterface):
                 return False
 
             weight = weight if 0.0 < weight else 0.0
-            self._out_neighbors[node.get_key()] = (node.get_key(), weight)
+            self._out_neighbors.update({node.get_key(): (node.get_key(), weight)})
             return True
 
         def remove_out_neighbor(self, node):

@@ -35,7 +35,9 @@ class GraphAlgo(GraphAlgoInterface):
         while queue:
             node = heapq.heappop(queue)
             node.set_info('black')
-            for n, w in node.get_out_neighbors().values():
+
+            for (n, w) in node.get_out_neighbors().values():
+                print(node.get_key(), node.get_out_neighbors())
                 neighbor = self._graph.get_node(n)
                 if neighbor.get_info() == 'white':
                     neighbor.set_info('grey')
@@ -53,15 +55,18 @@ class GraphAlgo(GraphAlgoInterface):
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
 
-        if self._graph.get_node(id1) is None or self._graph.get_node(id2):
+        if self._graph.get_node(id1) is None or self._graph.get_node(id2) is None:
             return -1, []
         if self._graph.get_node(id1) == self._graph.get_node(id2):
             return 0, [self._graph.get_node(id1)]
 
         reversed_path = []
         self.dijkstra(id1)
+        print('ron == roman')
         node = self._graph.get_node(id2)
+
         while node.get_tag() != -1:
+            print(node.get_tag(), end=', ')
             reversed_path.append(node)
             node = self._graph.get_node(node.get_tag())
         path = [reversed_path[x-1] for x in range(len(reversed_path), 0, -1)]

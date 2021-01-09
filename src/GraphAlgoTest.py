@@ -5,7 +5,7 @@ from GraphAlgo import GraphAlgo
 
 def graph_algo_a():
     g = DiGraph()
-    for i in range(0,5):
+    for i in range(0, 5):
         g.add_node(i)
     g.add_edge(0, 1, 5)
     g.add_edge(1, 0, 8)
@@ -28,6 +28,10 @@ class MyTestCase(unittest.TestCase):
         g = GraphAlgo(graph_algo_a())
         g.dijkstra(0)
         self.assertEqual(10, g.get_graph().get_node(4).get_weight())
+
+    def test_shortest_path(self):
+        g = GraphAlgo(graph_algo_a())
+        self.assertEqual(3, g.shortest_path(0, 4)[0])
 
 
 if __name__ == '__main__':
