@@ -26,9 +26,9 @@ class DiGraph(GraphInterface):
 
                 self._mc += 1
                 self._edges[(id1, id2)] = weight
-                self._vertices[id1][1].add_out_neighbor(id2, weight)
-                self._vertices[id2][1].add_in_neighbor(id1, weight)
-                return True
+                flag1= self._vertices[id1][1].add_out_neighbor(self.get_node(id2), weight)
+                flag2= self._vertices[id2][1].add_in_neighbor(self.get_node(id1), weight)
+                return flag1 and flag2
 
         return False
 
@@ -82,13 +82,13 @@ class DiGraph(GraphInterface):
 
     def all_in_edges_of_node(self, id1: int) -> dict:
         try:
-            return self._vertices[id1].get_in_neighbors()
-        except KeyError:
+            return self._vertices[id1][1].get_in_neighbors()
+        except KeyError as E:
             return dict()
 
     def all_out_edges_of_node(self, id1: int) -> dict:
         try:
-            return self._vertices[id1].get_out_neighbors()
+            return self._vertices[id1][1].get_out_neighbors()
         except KeyError:
             return dict()
 
@@ -137,7 +137,7 @@ class DiGraph(GraphInterface):
                 return False
 
             weight = weight if 0.0 < weight else 0.0
-            self._in_neighbors[node.get_key()] = (node.get_key(), weight)
+            self._in_neighbors.update({node.get_key(): (node.get_key(), weight)})
             return True
 
         def remove_in_neighbor(self, node):
