@@ -1,13 +1,11 @@
 from typing import List
 
 import GraphInterface
-import matplotlib.pyplot as plt
-import numpy as np
-import math
-import heapq
+
 
 from GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph
+from PriorityQueue import PriorityQueue
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -20,7 +18,6 @@ class GraphAlgo(GraphAlgoInterface):
     def dijkstra(self, s: int):
         if self._mc == self._graph.get_mc() and s == self._src_dijkstra:
             return
-
         GraphAlgo._mc = self._graph.get_mc()
         GraphAlgo._src_dijkstra = s
 
@@ -28,24 +25,25 @@ class GraphAlgo(GraphAlgoInterface):
             node.set_info('white')
             node.set_tag(-1)
             node.set_weight(float('inf'))
+        #self._graph.printData()
+        queue = PriorityQueue();
+        self._graph.get_node(s).set_weight(0.0)
+        queue.insert(self._graph.get_node(s))
 
-        queue = [self._graph.get_node(s)]
-        queue[0].set_weight(0.0)
-
-        while queue:
-            node = heapq.heappop(queue)
+        while not queue.isEmpty():
+            node=queue.delete()
             node.set_info('black')
-
             for (n, w) in node.get_out_neighbors().values():
-                print(node.get_key(), node.get_out_neighbors())
                 neighbor = self._graph.get_node(n)
                 if neighbor.get_info() == 'white':
                     neighbor.set_info('grey')
-                    heapq.heappush(queue, neighbor)
+                    queue.insert(neighbor)
 
                 if neighbor.get_weight() > node.get_weight() + w:
                     neighbor.set_weight(node.get_weight() + w)
                     neighbor.set_tag(node.get_key())
+
+        #self._graph.printData()
 
     def load_from_json(self, file_name: str) -> bool:
         pass
@@ -62,14 +60,16 @@ class GraphAlgo(GraphAlgoInterface):
 
         reversed_path = []
         self.dijkstra(id1)
-        print('ron == roman')
         node = self._graph.get_node(id2)
 
         while node.get_tag() != -1:
-            print(node.get_tag(), end=', ')
             reversed_path.append(node)
             node = self._graph.get_node(node.get_tag())
-        path = [reversed_path[x-1] for x in range(len(reversed_path), 0, -1)]
+
+        reversed_path.append(node)
+        path=[]
+        for i in range(0,len(reversed_path)):
+            path.append(reversed_path[len(reversed_path)-i-1])
         return self._graph.get_node(id2).get_weight(), path
 
     def connected_component(self, id1: int) -> list:

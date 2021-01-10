@@ -4,12 +4,22 @@ from Point import Point
 
 class DiGraph(GraphInterface):
 
-    _nodeCounter = 0
+    #_nodeCounter = 0
 
     def __init__(self) -> object:
         self._vertices = dict()
         self._edges = dict()
         self._mc = 0
+
+    def printData(self):
+      for i in self._vertices.keys():
+        print(self.get_node(i).get_key(),self.get_node(i).get_weight())
+
+    def __str__(self):
+        vkeys=self._vertices.keys().__str__()
+        ekeys=self._edges.keys().__str__()
+        return 'Node keys : '+vkeys+','+' edge keys : '+ekeys
+
 
     def v_size(self) -> int:
         return len(self._vertices)
@@ -102,8 +112,8 @@ class DiGraph(GraphInterface):
 
         def __init__(self, key=None, point=None, info='', tag=0, weight=0.0):
 
-            DiGraph._nodeCounter += 1
-            self._key = key if key else DiGraph._nodeCounter
+            #DiGraph._nodeCounter += 1
+            self._key = key
             self._point = point.__copy__() if point else Point()
             self._info = info
             self._tag = tag
@@ -182,6 +192,3 @@ class DiGraph(GraphInterface):
 
         def __gt__(self, other):
             return self.get_weight() > other.get_weight()
-
-        def __ge__(self, other):
-            return self.get_weight() >= other.get_weight()

@@ -24,15 +24,23 @@ def graph_algo_a():
 
 class MyTestCase(unittest.TestCase):
 
-    def test_dijkstra(self):
+    def test_dijkstra1(self):
         g = GraphAlgo(graph_algo_a())
         g.dijkstra(0)
         self.assertEqual(10, g.get_graph().get_node(4).get_weight())
 
-    def test_shortest_path(self):
+    def test_shortest_path1(self):
         g = GraphAlgo(graph_algo_a())
-        self.assertEqual(3, g.shortest_path(0, 4)[0])
+        self.assertEqual(3, len(g.shortest_path(0, 4)[1]))
 
+    def test_dijkstra2(self):
+        g = GraphAlgo(graph_algo_a())
+        g.dijkstra(4)
+        self.assertEqual(2.5, g.get_graph().get_node(0).get_weight())
+
+    def test_shortest_path2(self):
+        g = GraphAlgo(graph_algo_a())
+        self.assertEqual(4, len(g.shortest_path(4, 0)[1]))
 
 if __name__ == '__main__':
     unittest.main()
