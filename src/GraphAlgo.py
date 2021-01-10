@@ -8,12 +8,25 @@ from DiGraph import DiGraph
 from Point import Point
 from PriorityQueue import PriorityQueue
 import matplotlib.pyplot as plt
+import json
+from json import JSONEncoder
 import math
+
+
+class GraphEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, DiGraph):
+            return {"Edges": [{"src": x[0], "w": o.get_edge(x[0], x[1]), "dest": x[1]} for x in o.get_all_e()],
+                    "Nodes": [{"pos": str(o.get_node(y).get_point()), "id": y} for y in o.get_all_v()]}
+        elif isinstance(o, DiGraph.Node):
+            return {"pos": str(o.get_point()), "id": o.get_key()}
+        else:
+            return json.JSONEncoder.default(self, o)
 
 
 class GraphAlgo(GraphAlgoInterface):
 
-    def __init__(self, graph):
+    def __init__(self, graph=None):
         self._graph = graph if graph else DiGraph()
         self._mc = 0
         self._src_dijkstra = -1
@@ -49,10 +62,27 @@ class GraphAlgo(GraphAlgoInterface):
         #self._graph.printData()
 
     def load_from_json(self, file_name: str) -> bool:
-        pass
+        try:
+            with open(file_name, 'r') as file:
+                json_file = json.loads(file.read())
+            self._graph = DiGraph()
+            for node in json_file['Nodes']:
+                self._graph.add_node(node['id'], [float(x) for x in node['pos'].split(',')])
+            for edge in json_file['Edges']:
+                self._graph.add_edge(edge['src'], edge['dest'], edge['w'])
+            return True
+        except:
+            print("Error load_from_json")
+            return False
 
     def save_to_json(self, file_name: str) -> bool:
-        pass
+        try:
+            with open(file_name, 'w') as file:
+                file.write(GraphEncoder().encode(self._graph))
+                return True
+        except:
+            print("Error save_to_json")
+            return False
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
 
@@ -81,7 +111,7 @@ class GraphAlgo(GraphAlgoInterface):
     def connected_components(self) -> List[list]:
         pass
 
-    def tarjen_algo(self,node_id: int):
+    def tarjen_algo(self, node_id: int):
 
         for key, node in self._graph.get_all_v().values():
             node.set_info('white')

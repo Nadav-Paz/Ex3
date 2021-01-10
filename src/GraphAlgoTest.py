@@ -47,9 +47,23 @@ class MyTestCase(unittest.TestCase):
         g.plot_graph()
         self.assertEqual(4, len(g.shortest_path(4, 0)[1]))
 
+    def test_json_write(self):
+        g = GraphAlgo(graph_algo_a())
+        self.assertTrue(g.save_to_json('D:\\json_test'))
+
+    def test_json_just_read(self):
+        g = GraphAlgo()
+        self.assertTrue(g.load_from_json('D:\\json_test'))
+
+    def test_json_read(self):
+        g = GraphAlgo()
+        g.load_from_json('D:\\json_test')
+        self.assertTrue(GraphAlgo(graph_algo_a()).get_graph() == g.get_graph())
+
     def plot_test(self):
         g = GraphAlgo(graph_algo_a())
         g.plot_graph()
+
 
 if __name__ == '__main__':
     unittest.main()

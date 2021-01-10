@@ -1,6 +1,6 @@
 from GraphInterface import GraphInterface
 from Point import Point
-
+import json
 
 class DiGraph(GraphInterface):
 
@@ -12,14 +12,13 @@ class DiGraph(GraphInterface):
         self._mc = 0
 
     def printData(self):
-      for i in self._vertices.keys():
-        print(self.get_node(i).get_key(),self.get_node(i).get_weight())
+        for i in self._vertices.keys():
+            print(self.get_node(i).get_key(),self.get_node(i).get_weight())
 
     def __str__(self):
         vkeys=self._vertices.keys().__str__()
         ekeys=self._edges.keys().__str__()
         return 'Node keys : '+vkeys+','+' edge keys : '+ekeys
-
 
     def v_size(self) -> int:
         return len(self._vertices)
@@ -96,6 +95,9 @@ class DiGraph(GraphInterface):
     def get_all_v(self) -> dict:
         return self._vertices
 
+    def get_all_e(self):
+        return self._edges
+
     def all_in_edges_of_node(self, id1: int) -> dict:
         try:
             return self._vertices[id1][1].get_in_neighbors()
@@ -107,6 +109,25 @@ class DiGraph(GraphInterface):
             return self._vertices[id1][1].get_out_neighbors()
         except KeyError:
             return dict()
+
+    def __eq__(self, other):
+        if type(other) is not DiGraph:
+            print(type(other))
+            print('wtf')
+            return False
+
+        for key, node in self._vertices.values():
+            if other.get_node(key) != node:
+                print('node')
+                print(other.get_node(key), node)
+                return False
+
+        for (src, dst) in self._edges:
+            if other.get_edge(src, dst) != self._edges[src, dst]:
+                print('edge')
+                return False
+
+        return True
 
     class Node:
 
@@ -187,8 +208,14 @@ class DiGraph(GraphInterface):
         def __eq__(self, other):
             if type(other) is not DiGraph.Node:
                 return False
+            return other.get_key() == self._key and self._point == other.get_point()
 
-            return other.get_key == self._key and self._point == other.get_point()
+        def __ne__(self, other):
+            return not self.__eq__(other)
 
         def __gt__(self, other):
             return self.get_weight() > other.get_weight()
+
+        def __repr__(self):
+            return str(self._key)
+
