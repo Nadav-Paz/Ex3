@@ -81,11 +81,38 @@ class GraphAlgo(GraphAlgoInterface):
     def connected_components(self) -> List[list]:
         pass
 
+    def tarjen_algo(self,node_id: int):
+
+        for key, node in self._graph.get_all_v().values():
+            node.set_info('white')
+            node.set_tag(key)
+
+        node = self._graph.get_node(node_id)
+
+
+
+    def DFS(self,node_id: int):
+        s = self._graph.get_node(node_id)
+        s.set_info('black')
+        st = []
+        st.append(s)
+        while not len(st) == 0:
+            node = st[0]
+            st.pop(0)
+            for (n, w) in node.get_out_neighbors().values():
+                neighbor = self._graph.get_node(n)
+                if neighbor.get_info() == 'white':
+                    neighbor.set_info('grey')
+                    st.append(neighbor)
+
+
+
     def plot_graph(self) -> None:
         plt.figure()
         geox=[]
         geoy=[]
         i=0
+        plt.grid()
         for key, node in self._graph.get_all_v().values():
             geox.append(node.get_point().get_x())
             geoy.append(node.get_point().get_y())
@@ -97,7 +124,9 @@ class GraphAlgo(GraphAlgoInterface):
                 ax.arrow(node.get_point().get_x(),node.get_point().get_y(),dx,dy)
             i=i+1
         plt.scatter(geox,geoy,50)
-
+        plt.xlabel(' X postion ')
+        plt.ylabel(' y postion ')
+        plt.title(' Graph ')
         plt.show();
 
 

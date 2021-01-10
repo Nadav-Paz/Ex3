@@ -8,7 +8,7 @@ import math
 def graph_algo_a():
     g = DiGraph()
     for i in range(0, 5):
-        geo=Point(i,math.exp(i)-i)
+        geo=Point(i,100*math.sin(math.radians(i)+i-i*i))
         g.add_node(i)
         g.get_node(i).set_point(geo)
     g.add_edge(0, 1, 5)
