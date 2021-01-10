@@ -5,7 +5,10 @@ import GraphInterface
 
 from GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph
+from Point import Point
 from PriorityQueue import PriorityQueue
+import matplotlib.pyplot as plt
+import math
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -79,7 +82,24 @@ class GraphAlgo(GraphAlgoInterface):
         pass
 
     def plot_graph(self) -> None:
-        pass
+        plt.figure()
+        geox=[]
+        geoy=[]
+        i=0
+        for key, node in self._graph.get_all_v().values():
+            geox.append(node.get_point().get_x())
+            geoy.append(node.get_point().get_y())
+            for (n, w) in node.get_out_neighbors().values():
+                neighbor = self._graph.get_node(n)
+                ax=plt.axes()
+                dx=neighbor.get_point().get_x()-node.get_point().get_x()
+                dy = neighbor.get_point().get_y() - node.get_point().get_y()
+                ax.arrow(node.get_point().get_x(),node.get_point().get_y(),dx,dy)
+            i=i+1
+        plt.scatter(geox,geoy,50)
+
+        plt.show();
+
 
     def get_graph(self) -> GraphInterface:
         return self._graph

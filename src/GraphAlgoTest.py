@@ -1,12 +1,16 @@
 import unittest
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
+from src.Point import Point
+import math
 
 
 def graph_algo_a():
     g = DiGraph()
     for i in range(0, 5):
+        geo=Point(i,math.exp(i)-i)
         g.add_node(i)
+        g.get_node(i).set_point(geo)
     g.add_edge(0, 1, 5)
     g.add_edge(1, 0, 8)
     g.add_edge(0, 2, 2)
@@ -40,7 +44,13 @@ class MyTestCase(unittest.TestCase):
 
     def test_shortest_path2(self):
         g = GraphAlgo(graph_algo_a())
+        g.plot_graph()
         self.assertEqual(4, len(g.shortest_path(4, 0)[1]))
+
+    def plot_test(self):
+        g = GraphAlgo(graph_algo_a())
+        g.plot_graph()
 
 if __name__ == '__main__':
     unittest.main()
+
