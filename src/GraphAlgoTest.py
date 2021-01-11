@@ -46,6 +46,12 @@ class MyTestCase(unittest.TestCase):
         g = GraphAlgo(graph_algo_a())
         g.plot_graph()
         self.assertEqual(4, len(g.shortest_path(4, 0)[1]))
+    def test_remove(self):
+        g = GraphAlgo(graph_algo_a())
+        g.get_graph().remove_node(2)
+        g.shortest_path(0,4)
+        g.get_graph().printData()
+        self.assertEqual(13, g.shortest_path(0, 4)[0])
 
     def test_json_write(self):
         g = GraphAlgo(graph_algo_a())
