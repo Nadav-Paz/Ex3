@@ -67,7 +67,10 @@ class GraphAlgo(GraphAlgoInterface):
                 json_file = json.loads(file.read())
             self._graph = DiGraph()
             for node in json_file['Nodes']:
-                self._graph.add_node(node['id'], [float(x) for x in node['pos'].split(',')])
+                if 'pos' in node.keys():
+                    self._graph.add_node(node['id'], [float(x) for x in node['pos'].split(',')])
+                else:
+                    self._graph.add_node(node['id'])
             for edge in json_file['Edges']:
                 self._graph.add_edge(edge['src'], edge['dest'], edge['w'])
             return True
@@ -100,9 +103,12 @@ class GraphAlgo(GraphAlgoInterface):
             node = self._graph.get_node(node.get_tag())
 
         reversed_path.append(node)
-        path=[]
-        for i in range(0,len(reversed_path)):
+        path = []
+        for i in range(0, len(reversed_path)):
             path.append(reversed_path[len(reversed_path)-i-1])
+        if len(path) == 1:
+            if path[0].get_weight() == float('inf'):
+                path = None
         return self._graph.get_node(id2).get_weight(), path
 
     def connected_component(self, id1: int) -> list:
@@ -113,29 +119,31 @@ class GraphAlgo(GraphAlgoInterface):
 
     def tarjen_algo(self, node_id: int):
 
+
         for key, node in self._graph.get_all_v().values():
             node.set_info('white')
             node.set_tag(key)
 
         node = self._graph.get_node(node_id)
 
+        stck = []
 
 
-    def DFS(self,node_id: int):
+'''
+    def DFS(self, node_id: int):
         s = self._graph.get_node(node_id)
         s.set_info('black')
-        st = []
-        st.append(s)
-        while not len(st) == 0:
-            node = st[0]
-            st.pop(0)
-            for (n, w) in node.get_out_neighbors().values():
-                neighbor = self._graph.get_node(n)
+        st = [s]
+        low_link = {}
+        while st:
+            node = st.pop()
+            for (key, weight) in node.get_out_neighbors().values():
+                neighbor = self._graph.get_node(key)
                 if neighbor.get_info() == 'white':
                     neighbor.set_info('grey')
                     st.append(neighbor)
-
-
+                elif neighbor.get_info() == 'grey':
+                    low_link[node.get_key()] = min(low_link[key], low_link[node.get_key()])'''
 
     def plot_graph(self) -> None:
         plt.figure()

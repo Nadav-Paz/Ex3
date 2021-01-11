@@ -60,27 +60,29 @@ class DiGraph(GraphInterface):
             return False
 
     def remove_node(self, node_id: int) -> bool:
-        if self._vertices.__contains__(node_id):
+        try:
+            for key, weight in self.all_in_edges_of_node(node_id).values():
+                self._vertices[key][1].remove_out_neighbor(node_id)
+                self._edges.pop((key, node_id))
+            for key, weight in self.all_out_edges_of_node(node_id).values():
+                self._vertices[key][1].remove_in_neighbor(node_id)
+                self._edges.pop((node_id, key))
+            self._vertices.pop(node_id)
+            self._mc += 1
+            return True
+        except KeyError as e:
             return False
-
-        for node, ___ in self.all_in_edges_of_node(node_id).values():
-            self.remove_edge(node_id, node)
-        for node, ___ in self.all_out_edges_of_node(node_id).values():
-            self.remove_edge(node_id, node)
-        self._vertices.pop(node_id)
-        self._mc += 1
-
-        return True
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         try:
-            self._vertices[node_id1][1].remove_in_neighbor(node_id2)
+            self._vertices[node_id1][1].remove_out_neighbor(node_id2)
             self._vertices[node_id2][1].remove_in_neighbor(node_id1)
-            self._edges.pop((node_id1, node_id2))
+            del self._edges[(node_id1, node_id2)]
             self._mc += 1
             return True
 
         except KeyError:
+            print(11111111111111)
             return False
 
     def get_node(self, node_id: int):
