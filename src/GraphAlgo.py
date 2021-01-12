@@ -1,7 +1,7 @@
 from typing import List
 
 import GraphInterface
-
+import time
 
 from GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph
@@ -30,6 +30,7 @@ class GraphAlgo(GraphAlgoInterface):
         self._graph = graph if graph else DiGraph()
         self._mc = 0
         self._src_dijkstra = -1
+        self.strongly_connected_components = []
 
     def dijkstra(self, s: int):
         if self._mc == self._graph.get_mc() and s == self._src_dijkstra:
@@ -117,39 +118,78 @@ class GraphAlgo(GraphAlgoInterface):
     def connected_components(self) -> List[list]:
         pass
 
-    def tarjen_algo(self, node_id: int):
+    def tarjan_algo(self, node_id: int):
 
+        unique_key = str(time.time())
+        tag = 0
 
+        '''        
         for key, node in self._graph.get_all_v().values():
             node.set_info('white')
             node.set_tag(key)
+        '''
 
         node = self._graph.get_node(node_id)
+        node.set_info(unique_key)
+        trajan_counter = 0
 
-        stck = []
+        trajan_stack = [node]
+        dfs_stack = [node]
+        low_link = {node.get_key(): trajan_counter}
+        trajan_id = {node.get_key(): trajan_counter}
+        on_stack = {node.get_key()}
+        trajan_counter += 1
 
+        for _key, node in self._graph.get_all_v().values():
+            if node.get_info() != unique_key:
+                node.set_info(unique_key)
 
-'''
-    def DFS(self, node_id: int):
+                low_link[node.get_key()] = trajan_counter
+                trajan_id[node.get_key()] = trajan_counter
+                on_stack.add(node.get_key())
+
+                trajan_counter += 1
+                trajan_stack.append(node)
+                dfs_stack.append(node)
+                while dfs_stack:
+                    node = dfs_stack.pop()
+                    for key, weight in node.get_out_neighbors().values():
+                        neighbor = self._graph.get_node(key)
+
+                        if neighbor.get_info() != unique_key:
+                            neighbor.set_info(unique_key)
+                            neighbor.set_tag(tag)
+                            tag += 1
+                            trajan_stack.append(neighbor)
+                            dfs_stack.append(neighbor)
+
+                        elif neighbor.get_key() in trajan_stack:
+                            neighbor.set_tag(min(node.get_tag(), neighbor.get_tag()))
+                        else:
+                            pass    # not interested
+
+    def DFS(self, node_id: int, unique_key: str, tarjan_stack: list, low_link: dict, on_stack: set):
         s = self._graph.get_node(node_id)
-        s.set_info('black')
-        st = [s]
-        low_link = {}
-        while st:
-            node = st.pop()
+        s.set_info(unique_key)
+        dfs_stack = [s]
+        while dfs_stack:
+            node = dfs_stack.pop()
             for (key, weight) in node.get_out_neighbors().values():
                 neighbor = self._graph.get_node(key)
-                if neighbor.get_info() == 'white':
-                    neighbor.set_info('grey')
-                    st.append(neighbor)
-                elif neighbor.get_info() == 'grey':
-                    low_link[node.get_key()] = min(low_link[key], low_link[node.get_key()])'''
+                if neighbor.get_info() != unique_key:
+                    neighbor.set_info(unique_key)
+                    dfs_stack.append(neighbor)
+                    tarjan_stack.append(neighbor)
+                    #on_stack.add(neighbor.get_key())
+                if neighbor.get_key() in on_stack:
+                    low_link[neighbor.get_key()] = min(node.get_key(), neighbor.get_key())
+
 
     def plot_graph(self) -> None:
         plt.figure()
-        geox=[]
-        geoy=[]
-        i=0
+        geox = []
+        geoy = []
+        i = 0
         plt.grid()
         for key, node in self._graph.get_all_v().values():
             geox.append(node.get_point().get_x())
