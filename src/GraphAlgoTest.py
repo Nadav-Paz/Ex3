@@ -8,7 +8,7 @@ import math
 def graph_algo_a():
     g = DiGraph()
     for i in range(0, 5):
-        geo=Point(i,100*math.sin(math.radians(i)+i-i*i))
+        geo = Point(i, 100*math.sin(math.radians(i)+i-i*i))
         g.add_node(i)
         g.get_node(i).set_point(geo)
     g.add_edge(0, 1, 5)
@@ -24,6 +24,7 @@ def graph_algo_a():
     g.add_edge(4, 1, 5)
     g.add_edge(1, 4, 5)
     return g
+
 
 def graph_algo_b():
     g = DiGraph()
@@ -50,9 +51,10 @@ def graph_algo_b():
     g.add_edge(7,3,7)
     g.add_edge(3,4,0.1)
     g.add_edge(7,5,1.5)
-    a=GraphAlgo(g)
-    a.plot_graph()
+    # a = GraphAlgo(g)
+    # a.plot_graph()
     return g
+
 
 class MyTestCase(unittest.TestCase):
 
@@ -72,24 +74,12 @@ class MyTestCase(unittest.TestCase):
 
     def test_shortest_path2(self):
         g = GraphAlgo(graph_algo_a())
-        g.plot_graph()
         self.assertEqual(4, len(g.shortest_path(4, 0)[1]))
 
     def test_remove(self):
         g = GraphAlgo(graph_algo_a())
         g.get_graph().remove_node(2)
         self.assertEqual(13, g.shortest_path(4, 0)[0])
-
-    def test_connected_component(self):
-        g = GraphAlgo(graph_algo_a())
-        print(g.connected_component(0))
-        g.get_graph().printData()
-        self.assertEqual(3,3)
-
-    def test_connected_component2(self):
-        g = GraphAlgo(graph_algo_b())
-        print(g.connected_component(4))
-        self.assertEqual(3,3)
 
     def test_json_write(self):
         g = GraphAlgo(graph_algo_a())
@@ -104,11 +94,20 @@ class MyTestCase(unittest.TestCase):
         g.load_from_json('D:\\json_test')
         self.assertTrue(GraphAlgo(graph_algo_a()).get_graph() == g.get_graph())
 
-    def plot_test(self):
+    def test_connected_components(self):
         g = GraphAlgo(graph_algo_a())
+        scc = g.connected_components()
+        self.assertTrue(1 == len(scc) and g.get_graph().v_size() == len(scc[0]))
+
+    def test_connected_component2(self):
+        g = GraphAlgo(graph_algo_b())
+        self.assertEqual(3, len(g.connected_component(0)))
+
+    def test_plot(self):
+        g = GraphAlgo(graph_algo_b())
         g.plot_graph()
+        self.assertTrue(True)
 
 
 if __name__ == '__main__':
     unittest.main()
-

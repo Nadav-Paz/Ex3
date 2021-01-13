@@ -46,7 +46,6 @@ class DiGraph(GraphInterface):
 
     def add_node(self, node_id: object, pos: object = None) -> object:
         """
-
         :rtype: object
         """
         if type(node_id) is not int:
@@ -82,7 +81,6 @@ class DiGraph(GraphInterface):
             return True
 
         except KeyError:
-            print(11111111111111)
             return False
 
     def get_node(self, node_id: int):
@@ -220,4 +218,3 @@ class DiGraph(GraphInterface):
 
         def __repr__(self):
             return str(self._key)
-
