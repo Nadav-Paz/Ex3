@@ -8,9 +8,12 @@ import math
 def graph_algo_a():
     g = DiGraph()
     for i in range(0, 5):
-        geo = Point(i, 100*math.sin(math.radians(i)+i-i*i))
         g.add_node(i)
-        g.get_node(i).set_point(geo)
+    g.get_node(0).set_point(Point(10,100))
+    g.get_node(1).set_point(Point(60, 100))
+    g.get_node(2).set_point(Point(10, 50))
+    g.get_node(3).set_point(Point(60, 50))
+    g.get_node(4).set_point(Point(35, 10))
     g.add_edge(0, 1, 5)
     g.add_edge(1, 0, 8)
     g.add_edge(0, 2, 2)
@@ -55,7 +58,25 @@ def graph_algo_b():
     # a.plot_graph()
     return g
 
+def concteted_graph_builder(n: int):
+    g = DiGraph()
+    k=-1
+    for i in range(0, n):
+        j=i%5
+        if j==0:
+            k+=1
+        p=Point(10*(1+j),100*k)
+        g.add_node(i)
+        g.get_node(i).set_point(p)
+    g.add_edge(0,1,1)
+    g.add_edge(1,0,0.2)
+    for i in range(2,n):
+        g.add_edge(1,i,1)
+        g.add_edge(i,1,0.5)
 
+    #a = GraphAlgo(g)
+    #a.plot_graph()
+    return g
 class MyTestCase(unittest.TestCase):
 
     def test_dijkstra1(self):
@@ -99,12 +120,29 @@ class MyTestCase(unittest.TestCase):
         scc = g.connected_components()
         self.assertTrue(1 == len(scc) and g.get_graph().v_size() == len(scc[0]))
 
-    def test_connected_component2(self):
+    def test_connected_components2(self):
+        g = GraphAlgo(concteted_graph_builder(10))
+        scc = g.connected_components()
+        self.assertTrue(1 == len(scc))
+    def test_connected_components3(self):
+        g = GraphAlgo(concteted_graph_builder(1000))
+        scc = g.connected_components()
+        self.assertTrue(1 == len(scc))
+    def test_connected_components4(self):
+        g = GraphAlgo(concteted_graph_builder(1000000))
+        scc = g.connected_components()
+        self.assertTrue(1 == len(scc))
+
+    def test_connected_component(self):
         g = GraphAlgo(graph_algo_b())
         self.assertEqual(3, len(g.connected_component(0)))
 
     def test_plot(self):
         g = GraphAlgo(graph_algo_b())
+        g.plot_graph()
+        g = GraphAlgo(graph_algo_a())
+        g.plot_graph()
+        g = GraphAlgo(concteted_graph_builder(10))
         g.plot_graph()
         self.assertTrue(True)
 
