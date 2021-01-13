@@ -28,12 +28,13 @@ class GraphAlgo(GraphAlgoInterface):
 
     def __init__(self, graph=None):
         self._graph = graph if graph else DiGraph()
-        self._mc = 0
+        self._dijkstra_mc = 0
+        self._tarjan_mc = 0
         self._src_dijkstra = -1
-        self.strongly_connected_components = []
+        self._strongly_connected_components_list_of_lists = []
 
     def dijkstra(self, s: int):
-        if self._mc == self._graph.get_mc() and s == self._src_dijkstra:
+        if self._dijkstra_mc == self._graph.get_mc() and s == self._src_dijkstra:
             return
         GraphAlgo._mc = self._graph.get_mc()
         GraphAlgo._src_dijkstra = s
@@ -113,100 +114,107 @@ class GraphAlgo(GraphAlgoInterface):
         return self._graph.get_node(id2).get_weight(), path
 
     def connected_component(self, id1: int) -> list:
-        pass
+        if not self._graph.get_node(id1):
+            return []
+
+        if self._graph.get_mc() != self._tarjan_mc:
+            return self.tarjan_algo(id1, True)
+
+        for strongly_connected_component in self._strongly_connected_components_list_of_lists:
+            if id1 in strongly_connected_component:
+                return strongly_connected_component
 
     def connected_components(self) -> List[list]:
-        pass
+        if self._graph.get_mc() != self._tarjan_mc:
+            for only_one_item in self._graph.get_all_v():
+                self.tarjan_algo(only_one_item)
+                break
+            self._tarjan_mc = self._graph.get_mc()
+        return self._strongly_connected_components_list_of_lists
 
-    def tarjan_algo(self, node_id: int):
-
-        unique_key = str(time.time())
-        tag = 0
-
-        '''        
-        for key, node in self._graph.get_all_v().values():
-            node.set_info('white')
-            node.set_tag(key)
-        '''
+    def tarjan_algo(self, node_id: int, return_value=False):
+        self._strongly_connected_components_list_of_lists = []
+        unvisited = set(self._graph.get_all_v().keys())
+        low_link = {}
+        trajan_id = {}
+        on_stack = set()
+        trajan_stack = []
+        dfs_stack = []
 
         node = self._graph.get_node(node_id)
-        node.set_info(unique_key)
-        trajan_counter = 0
+        unvisited.remove(node.get_key())
 
-        trajan_stack = [node]
-        dfs_stack = [node]
-        low_link = {node.get_key(): trajan_counter}
-        trajan_id = {node.get_key(): trajan_counter}
-        on_stack = {node.get_key()}
-        trajan_counter += 1
+        while unvisited:
+            if low_link:
+                node = self._graph.get_node(unvisited.pop())
+            dfs_stack.append(node)
 
-        for _key, node in self._graph.get_all_v().values():
-            if node.get_info() != unique_key:
-                node.set_info(unique_key)
+            while dfs_stack:
+                node = dfs_stack.pop()
+                if node.get_key() not in on_stack:
+                    dfs_stack.append(node)  # for callback
+                    on_stack.add(node.get_key())
+                    trajan_stack.append(node)
+                    low_link[node.get_key()] = len(trajan_id)
+                    trajan_id[node.get_key()] = len(trajan_id)
 
-                low_link[node.get_key()] = trajan_counter
-                trajan_id[node.get_key()] = trajan_counter
-                on_stack.add(node.get_key())
-
-                trajan_counter += 1
-                trajan_stack.append(node)
-                dfs_stack.append(node)
-                while dfs_stack:
-                    node = dfs_stack.pop()
                     for key, weight in node.get_out_neighbors().values():
                         neighbor = self._graph.get_node(key)
 
-                        if neighbor.get_info() != unique_key:
-                            neighbor.set_info(unique_key)
-                            neighbor.set_tag(tag)
-                            tag += 1
-                            trajan_stack.append(neighbor)
+                        if neighbor.get_key() in unvisited:
+                            unvisited.remove(neighbor.get_key())
                             dfs_stack.append(neighbor)
+                            # low_link[neighbor.get_key()] = len(trajan_id)
+                            # trajan_id[neighbor.get_key()] = len(trajan_id)
 
-                        elif neighbor.get_key() in trajan_stack:
-                            neighbor.set_tag(min(node.get_tag(), neighbor.get_tag()))
-                        else:
-                            pass    # not interested
+                else:
+                    for key, weight in node.get_out_neighbors().values():
+                        neighbor = self._graph.get_node(key)
+                        if neighbor.get_key() in on_stack:
+                            low_link[node.get_key()] = min(low_link[node.get_key()], low_link[neighbor.get_key()])
 
-    def DFS(self, node_id: int, unique_key: str, tarjan_stack: list, low_link: dict, on_stack: set):
-        s = self._graph.get_node(node_id)
-        s.set_info(unique_key)
-        dfs_stack = [s]
-        while dfs_stack:
-            node = dfs_stack.pop()
-            for (key, weight) in node.get_out_neighbors().values():
-                neighbor = self._graph.get_node(key)
-                if neighbor.get_info() != unique_key:
-                    neighbor.set_info(unique_key)
-                    dfs_stack.append(neighbor)
-                    tarjan_stack.append(neighbor)
-                    #on_stack.add(neighbor.get_key())
-                if neighbor.get_key() in on_stack:
-                    low_link[neighbor.get_key()] = min(node.get_key(), neighbor.get_key())
-
+                    if trajan_id[node.get_key()] == low_link[node.get_key()] and node.get_key() in on_stack:
+                        strongly_connected_component = []
+                        while True:
+                            flag = False
+                            pop = trajan_stack.pop()
+                            on_stack.remove(pop.get_key())
+                            strongly_connected_component.append(pop.get_key())
+                            if return_value:
+                                if pop.get_key() == node_id:
+                                    flag = True
+                            if pop.get_key() == node.get_key():
+                                strongly_connected_component.sort()
+                                self._strongly_connected_components_list_of_lists.append(strongly_connected_component)
+                                if flag:
+                                    return strongly_connected_component
+                                break
 
     def plot_graph(self) -> None:
         plt.figure()
-        geox = []
-        geoy = []
-        i = 0
         plt.grid()
+        l = 5
+        r = 500
+        p = 0.33
         for key, node in self._graph.get_all_v().values():
-            geox.append(node.get_point().get_x())
-            geoy.append(node.get_point().get_y())
+            ax = plt.axes()
+            x = node.get_point().get_x()
+            y = node.get_point().get_y()
+            plt.scatter(x, y, r)
             for (n, w) in node.get_out_neighbors().values():
                 neighbor = self._graph.get_node(n)
-                ax=plt.axes()
-                dx=neighbor.get_point().get_x()-node.get_point().get_x()
-                dy = neighbor.get_point().get_y() - node.get_point().get_y()
-                ax.arrow(node.get_point().get_x(),node.get_point().get_y(),dx,dy)
-            i=i+1
-        plt.scatter(geox,geoy,50)
+                dx = neighbor.get_point().get_x() - x
+                dy = neighbor.get_point().get_y() - y
+                if dy == 0:
+                    ax.arrow(x, y, p * dx, p * dy, head_width=l, head_length=l / 5)
+                else:
+                    ax.arrow(x, y, p * dx, p * dy, head_width=l / 5, head_length=l)
+                ax.arrow(x + p * dx, y + p * dy, (1 - p) * dx, (1 - p) * dy)
+            ax.text(x, y, str(key), fontsize=10, color='white', weight="bold")
         plt.xlabel(' X postion ')
         plt.ylabel(' y postion ')
         plt.title(' Graph ')
-        plt.show();
-
+        plt.show()
 
     def get_graph(self) -> GraphInterface:
         return self._graph

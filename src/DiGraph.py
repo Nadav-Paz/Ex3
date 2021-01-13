@@ -82,7 +82,6 @@ class DiGraph(GraphInterface):
             return True
 
         except KeyError:
-            print(11111111111111)
             return False
 
     def get_node(self, node_id: int):
