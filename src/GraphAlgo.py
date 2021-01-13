@@ -112,40 +112,41 @@ class GraphAlgo(GraphAlgoInterface):
         return self._graph.get_node(id2).get_weight(), path
 
     def connected_component(self, id1: int) -> list:
-        L=[]
-        node=self.get_graph().get_node(id1)
-        if node == None:
-            print('eror ')
-            return L
-        else :
-
-            self.tarjen_algo()
-            for key, node in self._graph.get_all_v().values():
-                if self.low_link[key]==self.low_link[id1] :
-                    L.append(node)
-            return L
+        pass
 
     def connected_components(self) -> List[list]:
         pass
 
-    def tarjen_algo(self):
-        self.tarjan_stack.clear()
-        self.on_stack.clear()
-        self.low_link.clear()
+    def tarjen_algo(self, node_id: int):
+
+
         for key, node in self._graph.get_all_v().values():
-            node.set_info('not visited')
-            self.low_link[key] = key
-            self.on_stack[key] = False
-        for key, node in self._graph.get_all_v().values():
-            if node.get_info()=='not visited':
-                self.DFSRecursive(key)
+            node.set_info('white')
+            node.set_tag(key)
+
+        node = self._graph.get_node(node_id)
+
+        stck = []
 
 
-
+'''
+    def DFS(self, node_id: int):
+        s = self._graph.get_node(node_id)
+        s.set_info('black')
+        st = [s]
+        low_link = {}
+        while st:
+            node = st.pop()
+            for (key, weight) in node.get_out_neighbors().values():
+                neighbor = self._graph.get_node(key)
+                if neighbor.get_info() == 'white':
+                    neighbor.set_info('grey')
+                    st.append(neighbor)
+                elif neighbor.get_info() == 'grey':
+                    low_link[node.get_key()] = min(low_link[key], low_link[node.get_key()])'''
 
     def plot_graph(self) -> None:
         plt.figure()
-        i=0
         plt.grid()
         l = 5
         r=500
