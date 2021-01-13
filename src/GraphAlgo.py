@@ -112,56 +112,59 @@ class GraphAlgo(GraphAlgoInterface):
         return self._graph.get_node(id2).get_weight(), path
 
     def connected_component(self, id1: int) -> list:
-        pass
+        L=[]
+        node=self.get_graph().get_node(id1)
+        if node == None:
+            print('eror ')
+            return L
+        else :
+
+            self.tarjen_algo()
+            for key, node in self._graph.get_all_v().values():
+                if self.low_link[key]==self.low_link[id1] :
+                    L.append(node)
+            return L
 
     def connected_components(self) -> List[list]:
         pass
 
-    def tarjen_algo(self, node_id: int):
-
-
+    def tarjen_algo(self):
+        self.tarjan_stack.clear()
+        self.on_stack.clear()
+        self.low_link.clear()
         for key, node in self._graph.get_all_v().values():
-            node.set_info('white')
-            node.set_tag(key)
+            node.set_info('not visited')
+            self.low_link[key] = key
+            self.on_stack[key] = False
+        for key, node in self._graph.get_all_v().values():
+            if node.get_info()=='not visited':
+                self.DFSRecursive(key)
 
-        node = self._graph.get_node(node_id)
-
-        stck = []
 
 
-'''
-    def DFS(self, node_id: int):
-        s = self._graph.get_node(node_id)
-        s.set_info('black')
-        st = [s]
-        low_link = {}
-        while st:
-            node = st.pop()
-            for (key, weight) in node.get_out_neighbors().values():
-                neighbor = self._graph.get_node(key)
-                if neighbor.get_info() == 'white':
-                    neighbor.set_info('grey')
-                    st.append(neighbor)
-                elif neighbor.get_info() == 'grey':
-                    low_link[node.get_key()] = min(low_link[key], low_link[node.get_key()])'''
 
     def plot_graph(self) -> None:
         plt.figure()
-        geox=[]
-        geoy=[]
         i=0
         plt.grid()
+        l = 5
+        r=500
+        p=0.33
         for key, node in self._graph.get_all_v().values():
-            geox.append(node.get_point().get_x())
-            geoy.append(node.get_point().get_y())
+            ax = plt.axes()
+            x=node.get_point().get_x()
+            y=node.get_point().get_y()
+            plt.scatter(x,y,r)
             for (n, w) in node.get_out_neighbors().values():
                 neighbor = self._graph.get_node(n)
-                ax=plt.axes()
-                dx=neighbor.get_point().get_x()-node.get_point().get_x()
-                dy = neighbor.get_point().get_y() - node.get_point().get_y()
-                ax.arrow(node.get_point().get_x(),node.get_point().get_y(),dx,dy)
-            i=i+1
-        plt.scatter(geox,geoy,50)
+                dx=neighbor.get_point().get_x()-x
+                dy = neighbor.get_point().get_y() - y
+                if dy==0 :
+                    ax.arrow(x,y,p*dx,p*dy,head_width=l,head_length=l/5)
+                else :
+                    ax.arrow(x, y, p * dx, p * dy, head_width=l/5, head_length=l)
+                ax.arrow(x+p*dx,y+p*dy,(1-p)*dx,(1-p)*dy)
+            ax.text(x,y,str(key), fontsize=10, color='white',weight="bold")
         plt.xlabel(' X postion ')
         plt.ylabel(' y postion ')
         plt.title(' Graph ')

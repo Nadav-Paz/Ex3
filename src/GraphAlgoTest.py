@@ -25,6 +25,34 @@ def graph_algo_a():
     g.add_edge(1, 4, 5)
     return g
 
+def graph_algo_b():
+    g = DiGraph()
+    for i in range(0, 8):
+        g.add_node(i)
+    g.get_node(0).set_point(Point(30,10))
+    g.get_node(1).set_point(Point(40, 10))
+    g.get_node(2).set_point(Point(40, 100))
+    g.get_node(3).set_point(Point(10, 100))
+    g.get_node(4).set_point(Point(20, 100))
+    g.get_node(5).set_point(Point(20, 10))
+    g.get_node(6).set_point(Point(30, 100))
+    g.get_node(7).set_point(Point(10, 10))
+    g.add_edge(0, 1, 1)
+    g.add_edge(1, 2, 2)
+    g.add_edge(2, 0, 1)
+    g.add_edge(5,0,1)
+    g.add_edge(5, 6, 1)
+    g.add_edge(6, 0, 1)
+    g.add_edge(6, 4, 1)
+    g.add_edge(6, 2, 0.7)
+    g.add_edge(4,5,0.2)
+    g.add_edge(3,7,3)
+    g.add_edge(7,3,7)
+    g.add_edge(3,4,0.1)
+    g.add_edge(7,5,1.5)
+    a=GraphAlgo(g)
+    a.plot_graph()
+    return g
 
 class MyTestCase(unittest.TestCase):
 
@@ -51,6 +79,17 @@ class MyTestCase(unittest.TestCase):
         g = GraphAlgo(graph_algo_a())
         g.get_graph().remove_node(2)
         self.assertEqual(13, g.shortest_path(4, 0)[0])
+
+    def test_connected_component(self):
+        g = GraphAlgo(graph_algo_a())
+        print(g.connected_component(0))
+        g.get_graph().printData()
+        self.assertEqual(3,3)
+
+    def test_connected_component2(self):
+        g = GraphAlgo(graph_algo_b())
+        print(g.connected_component(4))
+        self.assertEqual(3,3)
 
     def test_json_write(self):
         g = GraphAlgo(graph_algo_a())
