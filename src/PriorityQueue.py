@@ -33,8 +33,8 @@ class PriorityQueue(object):
         self.queue[j] = n
 
     def decrease(self):
-        newqueue=[]
-        for i in range(1,len(self.queue)):
+        newqueue = []
+        for i in range(1, len(self.queue)):
             newqueue.append(self.queue[i])
         self.queue=newqueue
 
