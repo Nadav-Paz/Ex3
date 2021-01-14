@@ -180,7 +180,7 @@ class GraphAlgo(GraphAlgoInterface):
                                 if pop.get_key() == node_id:
                                     flag = True
                             if pop.get_key() == node.get_key():
-                                strongly_connected_component.sort()
+                                #strongly_connected_component.sort()
                                 self._strongly_connected_components_list_of_lists.append(strongly_connected_component)
                                 if flag:
                                     return strongly_connected_component
