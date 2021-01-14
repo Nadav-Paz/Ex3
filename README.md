@@ -1,9 +1,11 @@
-EX3 - Python
+# EX3 - Python
+
+## Ron Kappel and Nadav Paz
 
 In this project we implemented a weighted directoinal graph in Python and coresponding algorithms.
 
-Class DiGraph:
-Methods:
+## Class DiGraph:
+### Methods:
 * v_size - Returns the number of nodes in the graph
 
 * e_size - Returns the number of edges in the graph.
@@ -42,8 +44,8 @@ Methods:
                         Parametes: node id
                         Returns: dict of nodes this node is pointing at {key: weight of the edge}
                         
-Class Node (Nested in DiGraph):
-Class Variables:
+## Class Node (Nested in DiGraph):
+### Class Variables:
 
 - _key
 - _point (location in 2D/3D)
@@ -53,8 +55,7 @@ Class Variables:
 - _in_neighbors  - dict
 - _out_neighbors - dict
 
-Methods:
-
+### Methods:
 * getters and setters
 
 * add_X_neighbor - adds a X(in/out) neighbor to the node
@@ -66,9 +67,9 @@ remove_X_neighbor - removes a X(in/out) neighbor from the node
                    Returns: if the neighbor was removed successfully - boolean
 
 
-Class GraphAlgo:
+## Class GraphAlgo:
 
-Methods:
+### Methods:
 
 * dijkstra - runs a non recursive Dijkstra algorithm from a given node to find shortest pathes to all connected nodes
 
