@@ -2,7 +2,7 @@ import unittest
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
 from src.Point import Point
-import math
+import networkx as nx
 
 
 def graph_algo_a():
@@ -132,6 +132,11 @@ class MyTestCase(unittest.TestCase):
         g = GraphAlgo(concteted_graph_builder(1000000))
         scc = g.connected_components()
         self.assertTrue(1 == len(scc))
+    def test_shortestpath_runnig_time(self):
+        n=1000
+        g = GraphAlgo(concteted_graph_builder(n))
+        g.shortest_path(0,n-1)
+        self.assertTrue(True)
 
     def test_connected_component(self):
         g = GraphAlgo(graph_algo_b())
@@ -146,6 +151,49 @@ class MyTestCase(unittest.TestCase):
         g.plot_graph()
         self.assertTrue(True)
 
+    def test_networkx_conctetedcomponts(self):
+        g=nx.Graph()
+        n=100000
+        for i in range(0, n):
+            g.add_node(i)
+        g.add_edge(0, 1)
+        g.add_edge(1, 0)
+        for i in range(2, n):
+            g.add_edge(1, i)
+            g.add_edge(i, 1)
+        nx.connected_components(g)
+        self.assertTrue(True)
+
+    def test_networkx_shortespath(self):
+        g=nx.DiGraph()
+        n=100000
+        for i in range(0, n):
+            g.add_node(i)
+        g.add_edge(0, 1,weight=1)
+        g.add_edge(1, 0,weight=2)
+        for i in range(2, n):
+            g.add_edge(1, i,weight=1)
+            g.add_edge(i, 1,weight=0.5)
+        s=nx.shortest_path(g,0,n-1)
+        self.assertEqual(1.5,s)
+    def test_networkx_shortespath2(self):
+        g=nx.DiGraph()
+        for i in range(0, 5):
+            g.add_node(i)
+        g.add_edge(0, 1, weight=5)
+        g.add_edge(1, 0, weight=8)
+        g.add_edge(0, 2, weight=2)
+        g.add_edge(2, 0, weight=1)
+        g.add_edge(2, 3, weight=1)
+        g.add_edge(3, 2, weight=0.5)
+        g.add_edge(3, 4, weight=12)
+        g.add_edge(4, 3, weight=1)
+        g.add_edge(0, 4, weight=20)
+        g.add_edge(4, 0, weight=20)
+        g.add_edge(4, 1, weight=5)
+        g.add_edge(1, 4, weight=5)
+        s=nx.shortest_path(g,0,4,weight='weight')
+        self.assertEqual(3,len(s))
 
 if __name__ == '__main__':
     unittest.main()
